@@ -9,7 +9,7 @@ Created on
 2014-03-18
 '''
 from flask import g, Flask, request
-from orm_search import find_by_location, find_by_month, find_by_week, find_by_hour
+from orm_search import find_by_location, find_by_month, find_by_week, find_by_hour, find_by_location_and_time
 import json
 
 app = Flask(__name__)
@@ -73,6 +73,21 @@ def search_by_week():
     res = find_by_week(week)
     return json.dumps(res)
 
+@app.route('/seach')
+def search_by_time_and_location():
+    timestamp = request.args.get('time', None)
+    lat = request.args.get('lat', None)
+    lng = request.args.get('lng', None)
+    if not (lat and lng):
+        return 'sorry'
+    try:
+        lat = float(lat)
+        lng = float(lng)
+    except Exception, e:
+        return e
+
+    res = find_by_location_and_time(lat, lng, timestamp)
+    return json.dumps(res)
 
 def main():
     app.run(host='0.0.0.0')

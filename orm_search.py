@@ -82,22 +82,24 @@ def find_by_location_and_time(lat, lng, time_stamp):
     lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, 5)
     activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).limit(2000)
     res = defaultdict(set)
-    pois = defaultdict(set)
     for i in activity_poi:
-        res[(i.activity.name, i.activity.id)].add((i.poi.name, i.poi.id))
+        res[(i.activity.name, i.activity.id)].add((i.poi.name, i.poi.id, (i.poi.lat, i.poi.lng)))
+
     activity_time = ActivityTime.select(ActivityTime, MyTime).join(MyTime).where(MyTime.hour == hour).limit(2000)
     res_activity, res_poi = set(), set()
     for i in activity_time:
         if (i.activity.name, i.activity.id) in res:
             res_activity.add((i.activity.name, APC[i.activity.id]))
             for i in res[(i.activity.name, i.activity.id)]:
-                res_poi.add((i[0], PAC[i[1]]))
+                res_poi.add((i[0], PAC[i[1]], i[2]))
+
     set_to_list = lambda x: [i for i in x]
     res_activity = set_to_list(res_activity)
     res_poi = set_to_list(res_poi)
     res_activity.sort(key=lambda x: x[1], reverse=True)
     res_poi.sort(key=lambda x: x[1], reverse=True)
-    return res_poi, res_activity
+    res_poi = map(lambda x: [ x[0], x[1], get_distance_hav_by_lat_lng(x[2][0], lat, x[2][1], lng)], res_poi[:10])
+    return res_poi[:10], res_activity[:10]
 
 def main():
     i, j = find_by_location_and_time(23.01646 ,113.744537, '2012-05-14T08:42:10')
