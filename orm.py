@@ -35,6 +35,7 @@ class MyTime(Model):
     week = IntegerField()
     month = IntegerField()
     hour = IntegerField()
+    unix_stamp = FloatField()
 
     class Meta:
         database = database
