@@ -80,14 +80,17 @@ def load_data(file_name):
         for i in pois:
             _.append(dict(id=i, name=pois[i][0], city=pois[i][1], type=pois[i][2], lat=pois[i][3], lng=pois[i][4]))
         pois = _ 
+        print 'start store meta data'
         with database.transaction():
             for poi in pois:
-                Poi.create(**poi)
+                if poi['lat']:
+                    Poi.create(**poi)
             for t in times:
                 hour, week, month = stamp_to_hour_week_month(t[1])
                 MyTime.create(stamp=t[1], hour=hour, week=week, month=month)
             for i in items:
                 Item.create(id=i[0], name=i[1], user=i[2], origin_text=i[3])
+        print 'finish store meta data'
         time_to_id = select_all_time() 
         with database.transaction():
             for t in times:
@@ -96,6 +99,7 @@ def load_data(file_name):
                 ActivityItem.create(activity=i[0], item=i[1])
             for p in activities_poi:
                 ActivityPoi.create(activity=p[0], poi=p[1])
+        print 'finish store relation data'
 
         #insert_massive('poi(id, name, city, type, lat, lng)',  pois, 6)
         #insert_massive('times(activity_id, stamp)',  times, 2)
