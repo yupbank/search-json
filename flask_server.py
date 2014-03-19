@@ -73,7 +73,7 @@ def search_by_week():
     res = find_by_week(week)
     return json.dumps(res)
 
-@app.route('/seach')
+@app.route('/search')
 def search_by_time_and_location():
     timestamp = request.args.get('time', None)
     lat = request.args.get('lat', None)
