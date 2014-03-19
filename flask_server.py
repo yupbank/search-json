@@ -86,8 +86,10 @@ def search_by_time_and_location():
     except Exception, e:
         return e
 
-    res = find_by_location_and_time(lat, lng, timestamp)
-    return json.dumps(res)
+    pois, activities = find_by_location_and_time(lat, lng, timestamp)
+    pois = map(lambda x: dict(name=x[0], popular=x[1], distance=x[2]), pois)
+    activities = map(lambda x: dict(name=x[0], popular=x[1]), activities)
+    return json.dumps(dict(pois=pois, activities=activities))
 
 def main():
     app.run(host='0.0.0.0')
