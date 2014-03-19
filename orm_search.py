@@ -80,24 +80,33 @@ def find_by_month(month, limit=10, offset=0):
 def find_by_location_and_time(lat, lng, time_stamp):
     hour, day, mon = stamp_to_hour_week_month(time_stamp)
     lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, 5)
-    print hour, lat1, time.time()
     activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).limit(2000)
     res = defaultdict(set)
+    pois = defaultdict(set)
     for i in activity_poi:
-        res[i.activity.name].add(i.poi.name)
+        res[(i.activity.name, i.activity.id)].add((i.poi.name, i.poi.id))
     activity_time = ActivityTime.select(ActivityTime, MyTime).join(MyTime).where(MyTime.hour == hour).limit(2000)
+    res_activity, res_poi = set(), set()
     for i in activity_time:
-        if i.activity.name in res:
-            res[i.activity.name].add(hour)
-    print hour, lat1, time.time()
-    print len(res.keys())
-    return []
+        if (i.activity.name, i.activity.id) in res:
+            res_activity.add((i.activity.name, APC[i.activity.id]))
+            for i in res[(i.activity.name, i.activity.id)]:
+                res_poi.add((i[0], PAC[i[1]]))
+    set_to_list = lambda x: [i for i in x]
+    res_activity = set_to_list(res_activity)
+    res_poi = set_to_list(res_poi)
+    res_activity.sort(key=lambda x: x[1], reverse=True)
+    res_poi.sort(key=lambda x: x[1], reverse=True)
+    return res_poi, res_activity
 
 def main():
-    for i in find_by_location_and_time(23.01646 ,113.744537, '2012-05-14T08:42:10'):
-        for j in i:
-            print j,
-        print
+    i, j = find_by_location_and_time(23.01646 ,113.744537, '2012-05-14T08:42:10')
+    for x in i:
+        print x[0], x[1],
+    print '----------'
+    for y in j:
+        print y[0], y[1],
+    print
 
 
 if __name__ == '__main__':
