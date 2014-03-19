@@ -83,7 +83,10 @@ def load_data(file_name):
                     Poi.create(**poi)
             for t in times:
                 hour, week, month = stamp_to_hour_week_month(t[1][:-6])
-                MyTime.create(stamp=t[1], hour=hour, week=week, month=month)
+                stamp_format='%Y-%m-%dT%H:%M:%S'
+                t_struct = time.strptime(t[1][:-6], stamp_format)
+                unix_stamp = time.mktime(t_struct)
+                MyTime.create(stamp=t[1], hour=hour, week=week, month=month, unix_stamp=unix_stamp)
             for i in items:
                 #Item.create(id=i[0], name=i[1], user=i[2], origin_text=i[3])
                 Item.create(id=i[0], name=i[1], user=i[2])
