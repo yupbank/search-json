@@ -24,7 +24,7 @@ class Item(Model):
     name = CharField()
     user = CharField()
     id = CharField(primary_key=True)
-    origin_text = TextField()
+    origin_text = TextField(null=True)
 
     class Meta:
         database = database

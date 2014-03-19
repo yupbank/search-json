@@ -62,7 +62,7 @@ def load_data(file_name):
             poi_id = poi.get('Id')
             if name and poi_id:
                 poi = data['POI']
-                lat, lng = poi.get('lat'), poi.get('lng')
+                lat, lng = poi.get('Lat'), poi.get('Lng')
                 poi_type = poi.get('Type')
                 poi_city = poi.get('City')
                 poi_name = poi.get('Name')
@@ -89,7 +89,8 @@ def load_data(file_name):
                 hour, week, month = stamp_to_hour_week_month(t[1])
                 MyTime.create(stamp=t[1], hour=hour, week=week, month=month)
             for i in items:
-                Item.create(id=i[0], name=i[1], user=i[2], origin_text=i[3])
+                #Item.create(id=i[0], name=i[1], user=i[2], origin_text=i[3])
+                Item.create(id=i[0], name=i[1], user=i[2])
         print 'finish store meta data'
         time_to_id = select_all_time() 
         with database.transaction():
