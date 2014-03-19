@@ -33,7 +33,7 @@ def search_by_location():
 
 
 @app.route('/hour')
-def search_by_location():
+def search_by_hour():
     hour = request.args.get('hour',None)
     if not hour:
         return 'sorry'
@@ -47,7 +47,7 @@ def search_by_location():
 
 
 @app.route('/month')
-def search_by_location():
+def search_by_month():
     month = request.args.get('month',None)
     if not month:
         return 'sorry'
@@ -61,7 +61,7 @@ def search_by_location():
 
 
 @app.route('/week')
-def search_by_location():
+def search_by_week():
     week = request.args.get('week',None)
     if not week:
         return 'sorry'

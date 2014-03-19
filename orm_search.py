@@ -41,6 +41,16 @@ def find_by_location(lat, lng, radius=5, limit=10, offset=0):
     _.sort(key=lambda x:x[-1], reverse=True)
     return _[offset:offset+limit]
 
+
+def find_by_poi_type(type, limit=10, offset=0):
+    activity_time = ActivityPoi.select(ActivityTime, Poi).join(Poi).where(Poi.type == type)
+    activity_count = defaultdict(int)
+    for i in  activity_time:
+        activity_count[i.activity.name] += 1
+    res = sorted([[i, j] for i,j in activity_count.iteritems()], key=lambda x: x[1], reverse=True)
+    return res[offset:offset+limit]
+
+
 def find_by_hour(hour, limit=10, offset=0):
     activity_time = ActivityTime.select(ActivityTime, MyTime).join(MyTime).where(MyTime.hour == hour)
     activity_count = defaultdict(int)
