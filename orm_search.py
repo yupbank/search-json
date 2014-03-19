@@ -81,16 +81,16 @@ def find_by_location_and_time(lat, lng, time_stamp):
     hour, day, mon = stamp_to_hour_week_month(time_stamp)
     lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, 5)
     print hour, lat1, time.time()
-    activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2)
+    activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).limit(2000)
     res = defaultdict(set)
     for i in activity_poi:
         res[i.activity.name].add(i.poi.name)
-    activity_time = ActivityTime.select(ActivityTime, MyTime).join(MyTime).where(MyTime.hour == hour)
+    activity_time = ActivityTime.select(ActivityTime, MyTime).join(MyTime).where(MyTime.hour == hour).limit(2000)
     for i in activity_time:
         if i.activity.name in res:
             res[i.activity.name].add(hour)
     print hour, lat1, time.time()
-    print res.keys()
+    print len(res.keys())
     return []
 
 def main():
