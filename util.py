@@ -9,8 +9,14 @@ Created on
 2014-03-13
 '''
 from math import sin, asin, cos, radians, fabs, sqrt, degrees
+import time as time_module
 
 EARTH_RADIUS = 6371.0
+
+
+def stamp_to_hour_week_month(stamp, stamp_format='%Y-%m-%dT%H:%M:%S'):
+    t_struct = time_module.strptime(stamp, stamp_format)
+    return t_struct.tm_hour, t_struct.tm_wday, t_struct.tm_mon
 
 
 def hav(theta):

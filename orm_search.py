@@ -10,7 +10,7 @@ Created on
 '''
 from collections import defaultdict
 from orm import *
-from util import get_lat_lng_range, get_distance_hav_by_lat_lng
+from util import get_lat_lng_range, get_distance_hav_by_lat_lng, stamp_to_hour_week_month
 
 def activit_poi_count():
     res = dict()
@@ -75,15 +75,16 @@ def find_by_month(month, limit=10, offset=0):
     res = sorted([[i, j] for i,j in activity_count.iteritems()], key=lambda x: x[1], reverse=True)
     return res[offset:offset+limit]
 
-def find_by_location_and_time(lat, lng, time_stamp=None):
+def find_by_location_and_time(lat, lng, time_stamp):
+    hour, day, mon = stamp_to_hour_week_month(stamp)
     lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, 5)
-    activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).join(ActivityTime, on=(ActivityPoi.activity==ActivityTime.activity)).join(MyTime).where(MyTime.hour== 1)
+    activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).join(ActivityTime, on=(ActivityPoi.activity==ActivityTime.activity)).join(MyTime).where(MyTime.hour== hour)
     for i in activity_poi:
         print i
     return []
 
 def main():
-    for i in find_by_location_and_time(23.01646 ,113.744537):
+    for i in find_by_location_and_time(23.01646 ,113.744537, '2012-05-14T08:42:10'):
         for j in i:
             print j,
         print

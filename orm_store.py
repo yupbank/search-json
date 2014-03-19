@@ -10,7 +10,8 @@ Created on
 '''
 from orm import *
 import json
-import time as time_module
+from util import stamp_to_hour_week_month
+
 
 def select_existing_activies():
     res = dict()
@@ -24,11 +25,6 @@ def select_all_time():
         res[i.stamp] = i.id
     return res
 
-def stamp_to_hour_week_month(stamp):
-    stamp = stamp[:-6]
-    stamp_format = '%Y-%m-%dT%H:%M:%S'
-    t_struct = time_module.strptime(stamp, stamp_format)
-    return t_struct.tm_hour, t_struct.tm_wday, t_struct.tm_mon
 
 def load_new_activies(file_name):
     existing_activities = select_existing_activies()
@@ -86,7 +82,7 @@ def load_data(file_name):
                 if poi['lat']:
                     Poi.create(**poi)
             for t in times:
-                hour, week, month = stamp_to_hour_week_month(t[1])
+                hour, week, month = stamp_to_hour_week_month(t[1][:-6])
                 MyTime.create(stamp=t[1], hour=hour, week=week, month=month)
             for i in items:
                 #Item.create(id=i[0], name=i[1], user=i[2], origin_text=i[3])
