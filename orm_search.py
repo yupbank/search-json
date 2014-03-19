@@ -98,8 +98,8 @@ def find_by_location_and_time(lat, lng, time_stamp):
     res_poi = set_to_list(res_poi)
     res_activity.sort(key=lambda x: x[1], reverse=True)
     res_poi.sort(key=lambda x: x[1], reverse=True)
-    res_poi = map(lambda x: [ x[0], x[1], get_distance_hav_by_lat_lng(x[2][0], lat, x[2][1], lng)], res_poi[:10])
-    return res_poi[:10], res_activity[:10]
+    res_poi = map(lambda x: [ x[0], x[1], get_distance_hav_by_lat_lng(x[2][0], lat, x[2][1], lng)], res_poi[:50])
+    return res_poi[:50], res_activity[:50]
 
 def main():
     i, j = find_by_location_and_time(23.01646 ,113.744537, '2012-05-14T08:42:10')
