@@ -105,7 +105,7 @@ def load_data(file_name):
 
 
 def main():
-    load_data('weibo.med')
+    load_data('/var/saedata/weibo/weibo.med')
 
 if __name__ == '__main__':
     main()
