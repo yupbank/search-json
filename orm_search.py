@@ -78,7 +78,7 @@ def find_by_month(month, limit=10, offset=0):
 def find_by_location_and_time(lat, lng, time_stamp):
     hour, day, mon = stamp_to_hour_week_month(time_stamp)
     lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, 5)
-    activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).join(ActivityTime, on=(ActivityPoi.activity==ActivityTime.activity)).join(MyTime).where(MyTime.hour== hour)
+    activity_poi = ActivityPoi.select(ActivityPoi, Poi).join(Poi).where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).join(ActivityTime, on=(ActivityPoi.activity==ActivityTime.activity)).join(MyTime).where(MyTime.unix_stamp == hour).limit(2000)
     for i in activity_poi:
         print i
     return []
