@@ -10,7 +10,7 @@ Created on
 '''
 from peewee import *
 
-database = SqliteDatabase('orm_data.db')
+database = SqliteDatabase('orm_data.db', check_same_thread = False)
 
 
 class Activity(Model):

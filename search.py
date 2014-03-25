@@ -36,21 +36,25 @@ set_to_list = lambda x: [i for i in x]
 
 
 def find_by_poi_id(poi_id):
-    print time.time()
     the_poi = Poi.get(id=poi_id)
-    activity_poi = ActivityPoi.select().where(poi_id==poi_id)
+    lat, lng =  the_poi.lat, the_poi.lng
+    print lat, lng
+    lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, 1)
     res_activity, res_poi = set(), set()
+    pois = Poi.select().where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2)
+    for poi in pois:
+        res_poi.add((poi.name, PAC[poi.id], (poi.lat, poi.lng), poi.id))
+    
+    activity_poi = ActivityPoi.select().where(poi_id==poi_id)
     for ap in activity_poi:
         res_activity.add((ap.activity.name, APC[ap.activity.id]))
-        res_poi.add((ap.poi.name, PAC[ap.poi.id], (ap.poi.lat, ap.poi.lng), ap.poi.id))
+    
     res_activity = set_to_list(res_activity)
     res_poi = set_to_list(res_poi)
-    print time.time()
     res_activity.sort(key=lambda x: x[1], reverse=True)
     res_poi.sort(key=lambda x: x[1], reverse=True)
-    res_poi = map(lambda x: [ x[0], x[1], x[3], get_distance_hav_by_lat_lng(x[2][0], the_poi.lat, x[2][1], the_poi.lng)], res_poi[:50])
-    print time.time()
-    return res_poi[:50], res_activity
+    res_poi = map(lambda x: [ x[0], x[1], x[3], get_distance_hav_by_lat_lng(x[2][0], lat, x[2][1], lng)], res_poi[:50])
+    return res_poi, res_activity[:50]
 
 def find_by_location(lat, lng, radius=1, limit=10, offset=0):
     lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, radius)
@@ -126,11 +130,9 @@ def main():
     #        print j,
     #print '----------'
     poi_id = 'B2094757D06EAAFE469C'
-    #pois, activities = find_by_poi_id(poi_id)
     print time.time()
-    ac = ActivityPoi.raw('select *, count(*) as p_count from activitypoi where poi_id = ? group by activity_id limit 50 ', poi_id)
-    for i in ac:
-        print i, i.__dict__
+    pois, activities = find_by_poi_id(poi_id)
+    print pois, activities
     print time.time()
 
 
