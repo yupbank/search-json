@@ -9,7 +9,7 @@ Created on
 2014-03-18
 '''
 from flask import g, Flask, request
-from orm_search import find_by_location, find_by_month, find_by_week, find_by_hour, find_by_location_and_time
+from search import find_by_location, find_by_month, find_by_week, find_by_hour, find_by_location_and_time
 import json
 
 app = Flask(__name__)
@@ -19,7 +19,7 @@ app = Flask(__name__)
 def search_by_location():
     lat = request.args.get('lat',None)
     lng = request.args.get('lng', None)
-    radius = request.args.get('radius', 5)
+    radius = request.args.get('radius', 1)
     if not (lat and lng):
         return 'sorry'
     try:
@@ -31,6 +31,14 @@ def search_by_location():
     res = find_by_location(lat, lng)
     return json.dumps(res)
 
+@app.route('/poi')
+def seach_by_poi():
+    poi_id = request.args.get('id', None)
+    if not (poi_id) :
+        return 'sorry'
+    elif not Poi.get(id=poi_id):
+        return 'sorry'
+    poi = Poi.get(id=poi_id)
 
 @app.route('/hour')
 def search_by_hour():
@@ -87,7 +95,7 @@ def search_by_time_and_location():
         return e
 
     pois, activities = find_by_location_and_time(lat, lng, timestamp)
-    pois = map(lambda x: dict(name=x[0], popular=x[1], distance=x[2]), pois)
+    pois = map(lambda x: dict(name=x[0], popular=x[1], id=x[2], distance=x[3]), pois)
     activities = map(lambda x: dict(name=x[0], popular=x[1]), activities)
     return json.dumps(dict(pois=pois, activities=activities))
 
