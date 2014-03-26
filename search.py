@@ -41,11 +41,11 @@ def find_by_poi_id(poi_id):
     print lat, lng
     lat1, lat2, lng1, lng2 = get_lat_lng_range(lat, lng, 1)
     res_activity, res_poi = set(), set()
-    pois = Poi.select().where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2)
+    pois = Poi.select().where(Poi.lat >= lat1 , Poi.lat <= lat2 , Poi.lng >= lng1 , Poi.lng <= lng2).limit(2000)
     for poi in pois:
         res_poi.add((poi.name, PAC[poi.id], (poi.lat, poi.lng), poi.id))
     
-    activity_poi = ActivityPoi.select().where(poi_id==poi_id)
+    activity_poi = ActivityPoi.select().join(Poi).where(Poi.id == poi_id).limit(2000)
     for ap in activity_poi:
         res_activity.add((ap.activity.name, APC[ap.activity.id]))
     
