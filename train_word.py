@@ -49,6 +49,7 @@ def main():
             a = a.replace('  ', ' ')
         a = a.strip()
         if a:
+            print line
             print a.encode('U8')
         else:
             continue

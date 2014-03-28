@@ -21,9 +21,9 @@ def main():
             line = line.decode('U8')
             line = line.strip().split(' ')
             for conponent in line:
-                if len(conponent) <= 3:
+                if 1< len(conponent) <= 3:
                     potential_words[conponent] += 1
-                else:
+                elif 1<len(conponent):
                     assets.add(conponent)
     b = [[i, j] for i, j in potential_words.iteritems()]
     b.sort(key=lambda x: x[1])
