@@ -21,14 +21,15 @@ def main():
             line = line.decode('U8')
             line = line.strip().split(' ')
             for conponent in line:
-                if 1< len(conponent) <= 3:
+                if 1< len(conponent) <= 5:
                     potential_words[conponent] += 1
                 elif 1<len(conponent):
                     assets.add(conponent)
     b = [[i, j] for i, j in potential_words.iteritems()]
     b.sort(key=lambda x: x[1])
     for i, j in b:
-        print i, j 
+        if j > 9:
+            print i.encode('u8'), j 
 
 
 if __name__ == '__main__':

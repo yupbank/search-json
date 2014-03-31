@@ -20,8 +20,9 @@ simple_url = re.compile(r'http://t.cn/\[?\w+', re.IGNORECASE)
 def main():
     text = set()
     for line in Item.select():
-        text.add(line.origin_text)
-    for line in text:
+        if line.user:
+            text.add((line.origin_text, line.user))
+    for line, user in text:
         res = simple_url.findall(line)
         a = line
         for i in res:
@@ -49,8 +50,7 @@ def main():
             a = a.replace('  ', ' ')
         a = a.strip()
         if a:
-            print line
-            print a.encode('U8')
+            print user, a.encode('U8')
         else:
             continue
 
