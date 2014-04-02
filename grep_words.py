@@ -14,7 +14,7 @@ from math import log
 
 default_cut_length = 4
 word_to_user = defaultdict(set)
-user_word_count = defaultdict(lambda : defaultdict(int)) 
+user_word_count = defaultdict(lambda: defaultdict(int))
 word_freq = defaultdict(int)
 document_freq = defaultdict(int)
 word_tf_idf = defaultdict(float)
@@ -39,12 +39,13 @@ def build_trie(atree):
         pointer[''] = ''
     return _
 
+
 def generate_by_cut(words, cut=default_cut_length):
     word_len = len(words)
     iter_len = cut if word_len > cut else word_len
-    for i in xrange(1, iter_len+1):
-        for j in xrange(0, word_len+1):
-            if len(words[j:j+i])==i:
+    for i in xrange(1, iter_len + 1):
+        for j in xrange(0, word_len + 1):
+            if len(words[j:j + i])==i:
                 yield words[j:j+i]
 
 trie_building = build_trie(tire)
@@ -111,11 +112,12 @@ def main():
     assets = set()
     print 'start reading words....'
     with open('words') as f:
-        for line in f:
+        for n, line in enumerate(f):
             line = line.decode('U8')
             line = line.strip().split(' ')
             user, document = line[0], line[1:]
             count_tf_idf_uf(user, document)
+            print n
     print 'finish reading words....'
     global total_user
     total_user = len(user_word_count.keys())
