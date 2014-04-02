@@ -12,7 +12,7 @@ import sys
 from collections import defaultdict
 from math import log
 
-default_cut_length = 6
+default_cut_length = 4
 word_to_user = defaultdict(set)
 user_word_count = defaultdict(lambda : defaultdict(int)) 
 word_freq = defaultdict(int)
@@ -109,18 +109,21 @@ def calculate_entropy_left(word):
 def main(): 
     potential_words = defaultdict(int) 
     assets = set()
+    print 'start reading words....'
     with open('words') as f:
         for line in f:
             line = line.decode('U8')
             line = line.strip().split(' ')
             user, document = line[0], line[1:]
             count_tf_idf_uf(user, document)
+    print 'finish reading words....'
     global total_user
     total_user = len(user_word_count.keys())
     word_combination = {}
     word_freedom = {}
 
 
+    print 'start aggregating results....'
 
     for word in word_to_user:
         if len(word) > 1:
@@ -130,18 +133,21 @@ def main():
         idf = log(float(total_document)/document_freq[word])
         word_tf_idf[word] = tf*idf
 
+    print 'finish aggregating results....'
     top = [ [i, j] for i,j in word_tf_idf.iteritems()]
     top.sort(key=lambda x:x[1], reverse=True)
     with open('tf_idf', 'w') as f:
         for i, j in top:
             print >>f, i.encode('U8'), j
     
+    print 'writing....'
     top = [ [i, j] for i,j in word_combination.iteritems()]
     top.sort(key=lambda x:x[1], reverse=True)
     with open('combination', 'w') as f:
         for i, j in top:
             print >>f, i.encode('U8'), j
 
+    print 'writing....'
     top = [ [i, j] for i,j in word_freedom.iteritems()]
     top.sort(key=lambda x:x[1], reverse=True)
     with open('freedom', 'w') as f:
