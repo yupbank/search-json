@@ -83,9 +83,6 @@ def calculate_entropy_left(word):
         if i in atree:
             atree = atree[i]
     scope = filter(lambda x: x, atree.keys())
-
-    #counts = filter(lambda x: x, map(lambda x: word_freq[(prefix+x)[::-1]], scope))
-    #print ' '.join(bitch)
     counts = map(lambda x: word_freq[(prefix+x)[::-1]], scope)
     
     return entropy(counts)
